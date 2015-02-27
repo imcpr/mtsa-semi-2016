@@ -58,7 +58,8 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new FacebookStrategy({
     clientID: '161000937247315',
     clientSecret: '7e717305c27710ba135610b8497cea16',
-    callbackURL: "http://localhost:5000/auth/facebook/callback"
+    //callbackURL: "http://localhost:5000/auth/facebook/callback",
+    callbackURL: "http://mtsa-semi.herokuapp.com/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     console.log('logged in as ' + profile.displayName + ' ' + profile.id );
@@ -67,7 +68,6 @@ passport.use(new FacebookStrategy({
 ));
 
 coninfo = 'postgres://nnfjxypfugfxlx:ICBucnf9nnSJHZf3CL-3zGKaDe@ec2-23-21-231-14.compute-1.amazonaws.com:5432/d66lpuatihm015';
-
 
 app.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
