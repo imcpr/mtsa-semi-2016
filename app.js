@@ -67,7 +67,7 @@ passport.use(new FacebookStrategy({
 ));
 
 coninfo = 'postgres://nnfjxypfugfxlx:ICBucnf9nnSJHZf3CL-3zGKaDe@ec2-23-21-231-14.compute-1.amazonaws.com:5432/d66lpuatihm015';
-db_url = 'postgres://casper:Ru8jo389!@localhost/casper'
+
 
 app.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
@@ -97,7 +97,7 @@ app.get('/auth/facebook/callback',
 
 app.post('/submit', function(req, resp){
   console.log(process.env.DATABASE_URL)
-  pg.connect(db_url, function(err, client, done) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
       if (err)
        { console.error(err); }
       var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + req.body.name + '\')';
