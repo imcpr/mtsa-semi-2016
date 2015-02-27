@@ -1,0 +1,12 @@
+//- var user = { name: 'John' }
+if user
+  div.welcomebox
+    // Filtered inline output
+    p.
+      Welcome, #{user.name}
+else
+  div.loginbox
+    form(name="vote", action="/submit", method="post")
+      input(type="pid", name="pid")
+      input(type="name", name="name")
+      input(type="submit", value="vote")

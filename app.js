@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var vote = require('./routes/vote');
+session = require('express-session');
 var app = express();
 var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
@@ -25,33 +26,52 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'olhosvermelhoseasenhaclassica', maxAge:null })); //session secret
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes);
 app.use('/users', users);
 
+
+function ensureAuthenticated(req, res, next) {
+  console.log(req.session);
+  console.log("auth status is " + req.isAuthenticated())
+  if (req.isAuthenticated())
+    next();
+  else
+    res.redirect('/login');
+}
+
+app.use('/vote', ensureAuthenticated, vote);
+app.use('/submit', ensureAuthenticated);
+
 passport.serializeUser(function(user, done) {
-done(null, user);
+  console.log("serializing "+user.id);
+  done(null, user.id);
 });
 passport.deserializeUser(function(obj, done) {
-done(null, obj);
+  console.log("de-serializing "+ obj);
+  done(null, obj);
 });
 
 passport.use(new FacebookStrategy({
     clientID: '161000937247315',
     clientSecret: '7e717305c27710ba135610b8497cea16',
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: "http://localhost:5000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     console.log('logged in as ' + profile.displayName + ' ' + profile.id );
-    done(null, profile.id);
+    done(null, profile);
   }
 ));
-app.use(passport.initialize());
 
+coninfo = 'postgres://nnfjxypfugfxlx:ICBucnf9nnSJHZf3CL-3zGKaDe@ec2-23-21-231-14.compute-1.amazonaws.com:5432/d66lpuatihm015';
+db_url = 'postgres://casper:Ru8jo389!@localhost/casper'
 
 app.get('/db', function (request, response) {
   pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-    client.query('SELECT * FROM test_table', function(err, result) {
+    client.query('SELECT * FROM Votes', function(err, result) {
       done();
       if (err)
        { console.error(err); response.send("Error " + err); }
@@ -60,7 +80,10 @@ app.get('/db', function (request, response) {
     });
   });
 })
-
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
@@ -69,11 +92,25 @@ app.get('/auth/facebook', passport.authenticate('facebook'));
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 app.get('/auth/facebook/callback', 
-  passport.authenticate('facebook', { 
-                                      failureRedirect: '/users' }), 
-			function(req,res) {
-				 res.render('index', { title: req.user });
-			});
+  passport.authenticate('facebook', { successRedirect : '/vote', failureRedirect: '/users' }) );
+
+
+app.post('/submit', function(req, resp){
+  console.log(process.env.DATABASE_URL)
+  pg.connect(db_url, function(err, client, done) {
+      if (err)
+       { console.error(err); }
+      var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + req.body.name + '\')';
+      console.log("QUERY = "+q);
+      client.query(q, function(err, result) {
+      done();
+      if (err)
+       { console.error(err); resp.send("Error " + err); }
+      else
+       { resp.send(result); }
+    });
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
