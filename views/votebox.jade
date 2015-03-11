@@ -1,0 +1,12 @@
+.col-sm-3.col-xs-6
+  h3(style='font-weight:bold;color:white')= award.name
+  p(style='color:white')= award.description
+  img.img-rounded(src='images/#{award.image}', style='width:100%')
+  br
+  form(name="vote", action="/submit", method="post", style='margin-top:10px; width:100%;')
+    input(type="hidden", name="pid", value=award.pid)
+    input(type="name", name="name", style='width:100%')
+    input(type="submit", value="Vote", style='width:50%')
+    div(style='width:50%;display:inline-block;padding:0;margin:0;text-align:center')
+        a(href='result/#{award.pid}')
+            b(style='color:#DAA520') View Result

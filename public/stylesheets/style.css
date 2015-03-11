@@ -1,5 +1,9 @@
+b,p,h3,h1{
+
+  color:white !important;
+}
 body {
-  padding: 50px;
+  /*padding: 50px;*/
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 

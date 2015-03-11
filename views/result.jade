@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css')
+    script(type="text/javascript", src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['corechart']}]}")
+    script(type='text/javascript')
+        |google.load("visualization", "1", {packages: ["corechart"]});
+        |google.setOnLoadCallback(drawChart);
+        |function drawChart() {
+        |  var dat = !{polldata}
+        |  var data = google.visualization.arrayToDataTable( dat );
+
+        |  var options = {
+        |    title: 'Current standings for #{pname}',
+        |    titleTextStyle:{color:'white'},
+        |    orientation: 'horizontal', 
+        |    colors:['#DAA520'],
+        |    legend: {position:'none'},
+        |    height:500,
+        |    backgroundColor: 'transparent',
+        |    annotations: {
+        |       textStyle: {
+        |          color: 'white',     // The color of the text.
+        |        }
+        |     },
+        |    hAxis: {
+        |      titleTextStyle:{color:'white'},
+        |      textStyle:{color:'white'},
+        |      title: 'Nominees',
+        |      minValue: 0
+        |    },
+        |    vAxis: {
+        |      titleTextStyle:{color:'white'},
+        |      textStyle:{color:'white'},
+        |      title: 'Votes'
+        |    }
+        |  };
+        
+        |  var chart = new google.visualization.BarChart(
+        |    document.getElementById('graph'));
+
+        |  chart.draw(data, options);
+        |}
+  body(style='background-image: url(/images/bg.jpg);')
+    block content
+
+  div.topbar(style='background-color:#333366')
+    div.container
+        h1(style='font-weight:bold;color:#DAA520') MTSA & JSA - Once upon a time
+        p(style='color:#DAA520') Vote for your friends to receive an year end award!
+  div.container
+    
+    .row(style='text-align:center')
+        #graph
+        
+

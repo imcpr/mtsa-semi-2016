@@ -1,12 +1,9 @@
-//- var user = { name: 'John' }
-if user
-  div.welcomebox
-    // Filtered inline output
-    p.
-      Welcome, #{user.name}
-else
-  div.loginbox
-    form(name="vote", action="/submit", method="post")
-      input(type="pid", name="pid")
-      input(type="name", name="name")
-      input(type="submit", value="vote")
+extends layout
+
+block content
+  div.container
+    .row
+        //each award in awards
+        //    include ./votebox.jade
+        h1(style='color:white') Voting will begin soon! 
+        h1(style='color:white') Keep an eye out on our Facebook page for announcements!

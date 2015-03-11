@@ -43,7 +43,7 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
-app.use('/vote', ensureAuthenticated, vote);
+//app.use('/vote', ensureAuthenticated);
 app.use('/submit', ensureAuthenticated);
 
 passport.serializeUser(function(user, done) {
@@ -58,8 +58,8 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new FacebookStrategy({
     clientID: '161000937247315',
     clientSecret: '7e717305c27710ba135610b8497cea16',
-    //callbackURL: "http://localhost:5000/auth/facebook/callback",
-    callbackURL: "http://mtsa-semi.herokuapp.com/auth/facebook/callback"
+    callbackURL: "http://localhost:5000/auth/facebook/callback",
+    //callbackURL: "http://mtsa-semi.herokuapp.com/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     console.log('logged in as ' + profile.displayName + ' ' + profile.id );
@@ -67,10 +67,13 @@ passport.use(new FacebookStrategy({
   }
 ));
 
-coninfo = 'postgres://nnfjxypfugfxlx:ICBucnf9nnSJHZf3CL-3zGKaDe@ec2-23-21-231-14.compute-1.amazonaws.com:5432/d66lpuatihm015';
+//coninfo = 'postgres://nnfjxypfugfxlx:ICBucnf9nnSJHZf3CL-3zGKaDe@ec2-23-21-231-14.compute-1.amazonaws.com:5432/d66lpuatihm015';
+//db_url = 'postgres://casper:Ru8jo389!@localhost/casper'
+db_url = process.env.DATABASE_URL
 
+/*
 app.get('/db', function (request, response) {
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  pg.connect(db_url, function(err, client, done) {
     client.query('SELECT * FROM Votes', function(err, result) {
       done();
       if (err)
@@ -84,6 +87,7 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
+*/
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
@@ -94,10 +98,86 @@ app.get('/auth/facebook', passport.authenticate('facebook'));
 app.get('/auth/facebook/callback', 
   passport.authenticate('facebook', { successRedirect : '/vote', failureRedirect: '/users' }) );
 
+app.get('/vote', function(req, resp){
+  console.log(process.env.DATABASE_URL)
+  pg.connect(db_url, function(err, client, done) {
+      if (err)
+       { console.error(err); }
+      var q = 'SELECT pid, name, description, image FROM Polls ORDER BY pid';
+      console.log("QUERY = "+q);
+      client.query(q, function(err, result) {
+      done();
+      if (err)
+       { console.error(err); resp.send("Error " + err); }
+      else
+       { 
+        console.log(result.rows);
+        resp.render('vote', {awards:result.rows}); 
+      }
+    });
+  });
+});
+
+/*
+app.get('/signup', function(req, resp){
+  console.log(process.env.DATABASE_URL)
+  pg.connect(db_url, function(err, client, done) {
+      if (err)
+       { console.error(err); }
+      var q = 'SELECT pid, name, description, image FROM Polls ORDER BY pid';
+      console.log("QUERY = "+q);
+      client.query(q, function(err, result) {
+      done();
+      if (err)
+       { console.error(err); resp.send("Error " + err); }
+      else
+       { 
+        console.log(result.rows);
+        resp.render('vote', {awards:result.rows}); 
+      }
+    });
+  });
+});
+*/
+
+
+app.get('/result/:pid', function(req, resp){
+  console.log(process.env.DATABASE_URL)
+  pg.connect(db_url, function(err, client, done) {
+      if (err)
+       { console.error(err); }
+      var pid = req.params.pid;
+      var q = 'SELECT (SELECT name FROM Polls WHERE pid = ' + pid + ') AS pname, name, count(*) FROM Votes WHERE pid = ' + pid + ' GROUP BY name';
+      console.log("QUERY = "+q);
+      client.query(q, function(err, result) {
+      done();
+      if (err)
+       { console.error(err); 
+         resp.send("Error " + err); }
+      else
+       { 
+        if (result.rows.length == 0)
+          resp.redirect('/vote');
+        else
+        {
+          console.log(result.rows);
+          var arr = [];
+          arr.push(['Candidate','Votes']);
+          for (var i = 0, len = result.rows.length; i < len; i++) {
+            var mod = [result.rows[i].name, parseInt(result.rows[i].count)];
+            arr.push(mod);
+          }
+          resp.render('result', {polldata:JSON.stringify(arr), pname:result.rows[0].pname}); 
+        }
+      }
+    });
+  });
+});
+
 
 app.post('/submit', function(req, resp){
   console.log(process.env.DATABASE_URL)
-  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  pg.connect(db_url, function(err, client, done) {
       if (err)
        { console.error(err); }
       var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + req.body.name + '\')';

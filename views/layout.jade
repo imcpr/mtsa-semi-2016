@@ -1,7 +1,19 @@
 doctype html
 html
   head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+    title MTSA & JSA - City Lights 
+    //
+        link(rel='stylesheet', href='/bootstrap/css/bootstrap.css')
+        link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/bootstrap/css/bootstrap-responsive.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        script(src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js')
+        script(src='/bootstrap/js/bootstrap.min.js')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css')
+  body(style='background-image: url(/images/bg.jpg);')
+    div.topbar(style='border-bottom:5px solid #DAA520;background-color:black')
+      div.container(style='')
+        a(href='/',style='text-decoration:none;')
+          h1(style='font-weight:bold;color:white;') MTSA & JSA - City Lights 
     block content
