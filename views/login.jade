@@ -3,5 +3,9 @@ extends layout
 block content
   div.container
     .row
-      .col-xs-12
-        
+      .col-xs-offset-4.col-xs-4(style='text-align:center;margin-top:20px')
+        b(style='color:white') Please log in through Facebook to vote.
+        br
+        b(style='color:white') Don't worry, we won't post anything on your wall!
+        a(href='auth/facebook')
+          img(src='/images/login-facebook.png', style='width:50%;margin-top:10px')

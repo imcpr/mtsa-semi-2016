@@ -2,9 +2,7 @@ extends layout
 
 block content
   div.container
-    .row
-        //each award in awards
-        //    include ./votebox.jade
-        .col-xs-12
-          h1(style='color:white') Voting will begin soon! 
-          h1(style='color:white') Keep an eye out on our Facebook page for announcements!
+    .row(style='margin-bottom:50px')
+        each award in awards
+            include ./votebox.jade
+

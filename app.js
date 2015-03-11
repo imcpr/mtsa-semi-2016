@@ -43,7 +43,7 @@ function ensureAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
-//app.use('/vote', ensureAuthenticated);
+app.use('/vote', ensureAuthenticated);
 app.use('/submit', ensureAuthenticated);
 
 passport.serializeUser(function(user, done) {
@@ -56,10 +56,12 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new FacebookStrategy({
-    clientID: '161000937247315',
-    clientSecret: '7e717305c27710ba135610b8497cea16',
-    callbackURL: "http://localhost:5000/auth/facebook/callback",
-    //callbackURL: "http://mtsa-semi.herokuapp.com/auth/facebook/callback"
+    // clientID: '161000937247315',
+    // clientSecret: '7e717305c27710ba135610b8497cea16',
+    clientID: '1411725585745575',
+    clientSecret: '9cb5d3deacedac74d8d8e7bffee437a3',
+    // callbackURL: "http://localhost:5000/auth/facebook/callback",
+    callbackURL: "http://semi.mtsa.tw/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     console.log('logged in as ' + profile.displayName + ' ' + profile.id );
@@ -83,11 +85,16 @@ app.get('/db', function (request, response) {
     });
   });
 })
+*/
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-*/
+
+app.get('/login', function(req,res){
+  res.render('login');
+});
+
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
@@ -108,7 +115,12 @@ app.get('/vote', function(req, resp){
       client.query(q, function(err, result) {
       done();
       if (err)
-       { console.error(err); resp.send("Error " + err); }
+       { console.error(err); 
+        // if(err['routine']=='_bt_check_unique')
+         resp.send("Error: You've already submitted a candidate for this award!"); 
+        // else
+        //   resp.send("Error " + err);
+        }
       else
        { 
         console.log(result.rows);
@@ -117,6 +129,8 @@ app.get('/vote', function(req, resp){
     });
   });
 });
+
+
 
 /*
 app.get('/signup', function(req, resp){
@@ -177,6 +191,8 @@ app.get('/result/:pid', function(req, resp){
 
 app.post('/submit', function(req, resp){
   console.log(process.env.DATABASE_URL)
+  if(req.body.name == '')
+    resp.send('Error: You must enter a candidate name!');
   pg.connect(db_url, function(err, client, done) {
       if (err)
        { console.error(err); }
@@ -185,9 +201,14 @@ app.post('/submit', function(req, resp){
       client.query(q, function(err, result) {
       done();
       if (err)
-       { console.error(err); resp.send("Error " + err); }
-      else
-       { resp.send(result); }
+       { console.error(err); 
+        if(err['routine']=='_bt_check_unique')
+         resp.send("Error: You've already submitted a candidate for this award!"); 
+        else
+         resp.send("Error " + err) }
+        else
+          resp.render('thankyou')
+      //  { resp.send(result); }
     });
   });
 });
