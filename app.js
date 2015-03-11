@@ -188,6 +188,10 @@ app.get('/result/:pid', function(req, resp){
   });
 });
 
+function toTitleCase(str)
+{
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 
 app.post('/submit', function(req, resp){
   console.log(process.env.DATABASE_URL)
@@ -196,7 +200,7 @@ app.post('/submit', function(req, resp){
   pg.connect(db_url, function(err, client, done) {
       if (err)
        { console.error(err); }
-      var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + req.body.name + '\')';
+      var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + toTitleCase(req.body.name) + '\')';
       console.log("QUERY = "+q);
       client.query(q, function(err, result) {
       done();
