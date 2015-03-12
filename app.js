@@ -197,24 +197,27 @@ app.post('/submit', function(req, resp){
   console.log(process.env.DATABASE_URL)
   if(req.body.name == '')
     resp.send('Error: You must enter a candidate name!');
-  pg.connect(db_url, function(err, client, done) {
-      if (err)
-       { console.error(err); }
-      var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + toTitleCase(req.body.name) + '\')';
-      console.log("QUERY = "+q);
-      client.query(q, function(err, result) {
-      done();
-      if (err)
-       { console.error(err); 
-        if(err['routine']=='_bt_check_unique')
-         resp.send("Error: You've already submitted a candidate for this award!"); 
-        else
-         resp.send("Error " + err) }
-        else
-          resp.render('thankyou')
-      //  { resp.send(result); }
+  else
+  {
+    pg.connect(db_url, function(err, client, done) {
+        if (err)
+         { console.error(err); }
+        var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + toTitleCase(req.body.name) + '\')';
+        console.log("QUERY = "+q);
+        client.query(q, function(err, result) {
+        done();
+        if (err)
+         { console.error(err); 
+          if(err['routine']=='_bt_check_unique')
+           resp.send("Error: You've already submitted a candidate for this award!"); 
+          else
+           resp.send("Error " + err) }
+          else
+            resp.render('thankyou')
+        //  { resp.send(result); }
     });
   });
+  }
 });
 
 // catch 404 and forward to error handler
