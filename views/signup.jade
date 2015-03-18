@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  div.container
+    .row
+      .col-xs-12.signup
+        form(name="vote", action="/membersignup", method="post", style='margin-top:10px; width:100%;')
+          p(style='color:white;margin-top:10px') Name:
+          input(type="name", name="name", style='')
+          p(style='color:white;margin-top:10px') Phone Number:
+          input(type="tel", name="tel", style='')
+          br
+          br
+          input(type="radio", name="food", value="pasta", style='') 
+          p(style='display:inline;color:white;margin-top:10px') Penne with Creamy Cognac Sauce
+          br
+          input(type="radio", name="food", value="pork", style='') 
+          p(style='display:inline;color:white;margin-top:10px') Roasted Pork Loin with Apples and Cranberries, Maple Sauce
+          p(style='color:white;margin-top:10px') Dietary restrictions
+          input(type="text", name="diet", style='') 
+          p(style='color:white;margin-top:10px') List people you would like to sit with
+          input(type="text", name="sit_with", style='') 
+          br
+          br
+          input(type="submit", value="Submit", style='')

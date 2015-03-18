@@ -95,6 +95,10 @@ app.get('/login', function(req,res){
   res.render('login');
 });
 
+app.get('/signup', function(req,res){
+  res.render('signup');
+});
+
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
@@ -203,6 +207,34 @@ app.post('/submit', function(req, resp){
         if (err)
          { console.error(err); }
         var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + toTitleCase(req.body.name) + '\')';
+        console.log("QUERY = "+q);
+        client.query(q, function(err, result) {
+        done();
+        if (err)
+         { console.error(err); 
+          if(err['routine']=='_bt_check_unique')
+           resp.send("Error: You've already submitted a candidate for this award!"); 
+          else
+           resp.send("Error " + err) }
+          else
+            resp.render('thankyou')
+        //  { resp.send(result); }
+    });
+  });
+  }
+});
+
+
+app.post('/membersignup', function(req, resp){
+  console.log(process.env.DATABASE_URL)
+  if(req.body.name == '')
+    resp.send('Error: You must enter a candidate name!');
+  else
+  {
+    pg.connect(db_url, function(err, client, done) {
+        if (err)
+         { console.error(err); }
+        var q = 'INSERT INTO Signup (name,tel,food,diet,sit_with) VALUES (\'' + req.body.name +'\',\''+ req.body.tel + '\',\'' + req.body.food +'\',\''+ req.body.diet +'\',\''+ req.body.sit_with + '\')';
         console.log("QUERY = "+q);
         client.query(q, function(err, result) {
         done();
