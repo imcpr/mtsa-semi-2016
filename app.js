@@ -234,7 +234,7 @@ app.post('/membersignup', function(req, resp){
     pg.connect(db_url, function(err, client, done) {
         if (err)
          { console.error(err); }
-        var q = 'INSERT INTO Signup (name,tel,food,diet,sit_with) VALUES (\'' + req.body.name +'\',\''+ req.body.tel + '\',\'' + req.body.food +'\',\''+ req.body.diet +'\',\''+ req.body.sit_with + '\')';
+        var q = 'INSERT INTO Signup (name,ticket,tel,food,diet,sit_with) VALUES (\'' + req.body.name +'\',' + req.body.ticket + ',\''+ req.body.tel + '\',\'' + req.body.food +'\',\''+ req.body.diet +'\',\''+ req.body.sit_with + '\')';
         console.log("QUERY = "+q);
         client.query(q, function(err, result) {
         done();
