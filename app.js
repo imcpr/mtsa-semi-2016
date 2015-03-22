@@ -165,7 +165,7 @@ app.get('/result/:pid', function(req, resp){
       if (err)
        { console.error(err); }
       var pid = req.params.pid;
-      var q = 'SELECT (SELECT name FROM Polls WHERE pid = ' + pid + ') AS pname, name, count(*) FROM Votes WHERE pid = ' + pid + ' GROUP BY name';
+      var q = 'SELECT (SELECT name FROM Polls WHERE pid = \'' + pid + '\') AS pname, name, count(*) FROM Votes WHERE pid = \'' + pid + '\' GROUP BY name';
       console.log("QUERY = "+q);
       client.query(q, function(err, result) {
       done();
@@ -206,7 +206,7 @@ app.post('/submit', function(req, resp){
     pg.connect(db_url, function(err, client, done) {
         if (err)
          { console.error(err); }
-        var q = 'INSERT INTO Votes (pid, uid, name) VALUES (' + req.body.pid +','+ req.user + ',\'' + toTitleCase(req.body.name) + '\')';
+        var q = 'INSERT INTO Votes (pid, uid, name) VALUES (\'' + req.body.pid +'\',\''+ req.user + '\',\'' + toTitleCase(req.body.name) + '\')';
         console.log("QUERY = "+q);
         client.query(q, function(err, result) {
         done();
