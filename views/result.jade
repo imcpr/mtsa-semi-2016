@@ -44,15 +44,14 @@ html
         |  chart.draw(data, options);
         |}
   body(style='background-image: url(/images/bg.jpg);')
-    block content
+    div.topbar(style='border-bottom:5px solid #DAA520;background-color:black')
+      div.container(style='')
+        a(href='/',style='text-decoration:none;')
+          h1(style='font-weight:bold;color:white;') MTSA & JSA - City Lights 
 
-  div.topbar(style='background-color:#333366')
     div.container
-        h1(style='font-weight:bold;color:#DAA520') MTSA & JSA - Once upon a time
-        p(style='color:#DAA520') Vote for your friends to receive an year end award!
-  div.container
     
-    .row(style='text-align:center')
+      .row(style='text-align:center')
         #graph
         a(href='/vote')
           h3(style='color:#DAA520') return to vote page
