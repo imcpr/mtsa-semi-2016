@@ -1,0 +1,17 @@
+INSERT INTO Polls (pid, name, description, image) VALUES
+(1, 'Best Smile', 'Nominate the friend with the smile that can light up the room!', 'Best-Smile.jpg'),
+(2, 'Best Booty', 'Nominate the friend with the slamming booty!', 'Best-Booty.jpg'),
+(3, 'Best Kisser', 'Nominate the friend whose kisses are swoon worthy.', 'Best-Kisser.jpg'),
+(4, 'Cutest Couple', 'Nominate the pair that has you believing in happily ever after!', 'Cutest-Couple.jpg'),
+(5, 'First Year Cutie', 'Nominate the first year that has won the hearts of all!', 'First-Year-Cutie.jpg'),
+(6, 'Forever Alone', 'Nominate the friend that will end up alone with ten cats.', 'Forever-Alone.jpg'),
+(7, 'Library Nerd', 'Nominate the friend whose second home is the library.', 'Library-Nerd.jpg'),
+(8, 'Likely to be on Maury', 'Nominate the friend who will be relieved to hear “YOU ARE NOT THE FATHER!”', 'Maury.jpg'),
+(9, 'Most Foodie', 'Nominate the friend who knows all the best noms in Montreal!', 'Most-Foodie.jpg'),
+(10, 'Likely to be in Jail', 'Nominate the friend who’s most likely to end up behind bars.', 'Most-Likely-Jail.jpg'),
+(11, 'Never In Class', 'Nominate the friend that can never be found at lectures!', 'Never-In-Class.jpg'),
+(12, 'Wildest Party Animal', 'Nominate the friend who is at ALL the parties ALL the time!', 'PartyAnimal.jpg'),
+(13, 'Selfie Master', 'Nominate the friend who has mastered the art of the selfie', 'Selfie-Master.jpg'),
+(14, 'Can Sleep Anywhere', 'Nominate the friend that has the uncanny ability to fall asleep anywhere!', 'Sleep-Anywhere.jpg'),
+(15, 'Top Chef', 'Nominate the friend who is the master of the culinary world!', 'Top-Chef.jpg'),
+(16, 'Two Shot Wonder', 'Nominate the friend who is the lightest of all lightweights!', 'Two-Shots.jpg');
